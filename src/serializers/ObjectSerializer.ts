@@ -69,6 +69,10 @@ export class ObjectSerializer extends SerializerBase {
   }
 
   public async serialize(argument: any, context: SerializationContext): Promise<any> {
+    if (!argument) {
+      return null;
+    }
+
     let subContext = context.getSubContext<ObjectSerializationContext>(this);
     let id = subContext.getIdFor(argument);
     if (!id) {

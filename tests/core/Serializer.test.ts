@@ -96,4 +96,15 @@ describe('Serializer', () => {
     });
 
   });
+
+  it('serializes complex object with metadata and null fields', async () => {
+    let dto = new ComplexDtoWithMeta();
+    dto.numberField = 7;
+    dto.subObject = undefined;
+
+    expect(await serializeObject(dto)).toEqual({
+      numberField: 7,
+      subObject: null
+    });
+  });
 });

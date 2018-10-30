@@ -116,6 +116,9 @@ var ObjectSerializer = (function (_super) {
             return __generator(this, function (_k) {
                 switch (_k.label) {
                     case 0:
+                        if (!argument) {
+                            return [2, null];
+                        }
                         subContext = context.getSubContext(this);
                         id = subContext.getIdFor(argument);
                         if (!!id) return [3, 9];
