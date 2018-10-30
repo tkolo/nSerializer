@@ -1,0 +1,21 @@
+{
+  "name": "nserializer",
+  "version": "0.1.0",
+  "description": "Serializer compatibile with Json.NET",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "repository": "https://github.com/tkolo/nSerializer",
+  "author": "Tomasz Kołosowski",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.3.5",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.4",
+    "typescript": "^3.1.1"
+  }
+}

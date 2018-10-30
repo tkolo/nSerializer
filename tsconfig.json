@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "outDir": "./dist/",
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "target": "es5",
+    "experimentalDecorators": true,
+    "allowJs": false,
+    "strict": true,
+    "noImplicitReturns": true,
+    "declaration": true,
+    "lib": [
+      "es2015"
+    ]
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}

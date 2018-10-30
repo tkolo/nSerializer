@@ -1,0 +1,272 @@
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var Serializer_1 = require("../core/Serializer");
+var SerializerBase_1 = require("./SerializerBase");
+var serializable_1 = require("../core/serializable");
+var ContextBase_1 = require("../core/context/ContextBase");
+var ObjectSerializationContext = (function () {
+    function ObjectSerializationContext() {
+        this._objects = [];
+        this._dtos = [];
+    }
+    ObjectSerializationContext.prototype.addAndAssignId = function (obj, dto) {
+        var id = this._objects.push(obj);
+        this._dtos.push(dto);
+        return id;
+    };
+    ObjectSerializationContext.prototype.getDtoForId = function (index) {
+        return this._dtos[index - 1];
+    };
+    ObjectSerializationContext.prototype.getIdFor = function (obj) {
+        return this._objects.indexOf(obj) + 1;
+    };
+    return ObjectSerializationContext;
+}());
+var ObjectDeserializationContext = (function () {
+    function ObjectDeserializationContext() {
+        this._objects = {};
+        this._listeners = [];
+    }
+    ObjectDeserializationContext.prototype.getObjectForId = function (id) {
+        return this._objects[id];
+    };
+    ObjectDeserializationContext.prototype.addObjectForId = function (id, obj) {
+        this._objects[id] = obj;
+        this.triggerOnObjectAdded(id, obj);
+    };
+    ObjectDeserializationContext.prototype.onObjectAddedAdd = function (listener) {
+        this._listeners.push(listener);
+    };
+    ObjectDeserializationContext.prototype.onObjectAddedRemove = function (listener) {
+        var index = this._listeners.indexOf(listener);
+        if (index !== -1) {
+            this._listeners.splice(index, 1);
+        }
+    };
+    ObjectDeserializationContext.prototype.triggerOnObjectAdded = function (id, obj) {
+        for (var _i = 0, _a = this._listeners; _i < _a.length; _i++) {
+            var listener = _a[_i];
+            listener(id, obj);
+        }
+    };
+    return ObjectDeserializationContext;
+}());
+var ObjectSerializer = (function (_super) {
+    __extends(ObjectSerializer, _super);
+    function ObjectSerializer() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    ObjectSerializer.prototype.createDeserializationSubContext = function () {
+        return new ObjectDeserializationContext();
+    };
+    ObjectSerializer.prototype.createSerializationSubContext = function () {
+        return new ObjectSerializationContext();
+    };
+    ObjectSerializer.prototype.serialize = function (argument, context) {
+        return __awaiter(this, void 0, void 0, function () {
+            var subContext, id, dto, metadata, promises, metaKey, fieldMeta, _a, _b, _i, key, value, serializer, _c, _d, _e, _f, _g, key, _h, _j, referencedDto;
+            return __generator(this, function (_k) {
+                switch (_k.label) {
+                    case 0:
+                        subContext = context.getSubContext(this);
+                        id = subContext.getIdFor(argument);
+                        if (!!id) return [3, 9];
+                        dto = {};
+                        metadata = argument[serializable_1.METADATA_FIELD];
+                        subContext.addAndAssignId(argument, dto);
+                        promises = {};
+                        if (metadata) {
+                            for (metaKey in metadata) {
+                                if (metadata.hasOwnProperty(metaKey)) {
+                                    fieldMeta = metadata[metaKey];
+                                    promises[metaKey] = fieldMeta.serializer.serialize(argument[metaKey], context);
+                                }
+                            }
+                        }
+                        if (!context.allowDynamic) return [3, 4];
+                        _a = [];
+                        for (_b in argument)
+                            _a.push(_b);
+                        _i = 0;
+                        _k.label = 1;
+                    case 1:
+                        if (!(_i < _a.length)) return [3, 4];
+                        key = _a[_i];
+                        value = argument[key];
+                        serializer = Serializer_1.guessSerializer(value);
+                        _c = promises;
+                        _d = key;
+                        return [4, serializer.serialize(value, context)];
+                    case 2:
+                        _c[_d] = _k.sent();
+                        _k.label = 3;
+                    case 3:
+                        _i++;
+                        return [3, 1];
+                    case 4:
+                        _e = [];
+                        for (_f in promises)
+                            _e.push(_f);
+                        _g = 0;
+                        _k.label = 5;
+                    case 5:
+                        if (!(_g < _e.length)) return [3, 8];
+                        key = _e[_g];
+                        if (!promises.hasOwnProperty(key)) return [3, 7];
+                        _h = dto;
+                        _j = key;
+                        return [4, promises[key]];
+                    case 6:
+                        _h[_j] = _k.sent();
+                        _k.label = 7;
+                    case 7:
+                        _g++;
+                        return [3, 5];
+                    case 8: return [2, dto];
+                    case 9:
+                        switch (context.referenceBehavior) {
+                            case ContextBase_1.ReferenceBehavior.Error:
+                                throw new Error("Cyclic reference detected for object " + argument);
+                            case ContextBase_1.ReferenceBehavior.Ignore:
+                                return [2, null];
+                            case ContextBase_1.ReferenceBehavior.Serialize:
+                                referencedDto = subContext.getDtoForId(id);
+                                referencedDto.$id = id.toString();
+                                return [2, {
+                                        $ref: id.toString()
+                                    }];
+                        }
+                        _k.label = 10;
+                    case 10: return [2];
+                }
+            });
+        });
+    };
+    ObjectSerializer.prototype.deserialize = function (argument, context) {
+        var _this = this;
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var subContext, id_1, object_1, obj, metadata, promises, metaKey, fieldMeta, _a, _b, _i, key, _c, _d;
+            return __generator(this, function (_e) {
+                switch (_e.label) {
+                    case 0:
+                        subContext = context.getSubContext(this);
+                        if (!argument.$ref) return [3, 1];
+                        switch (context.referenceBehavior) {
+                            case ContextBase_1.ReferenceBehavior.Error:
+                                throw new Error('$ref encountered, but ref deserialization is set to Error');
+                                break;
+                            case ContextBase_1.ReferenceBehavior.Ignore:
+                                resolve(null);
+                                return [2];
+                            case ContextBase_1.ReferenceBehavior.Serialize:
+                                id_1 = argument.$ref;
+                                object_1 = subContext.getObjectForId(id_1);
+                                if (object_1 == null) {
+                                    subContext.onObjectAddedAdd(function (contextId, obj) {
+                                        if (contextId === id_1)
+                                            resolve(obj);
+                                    });
+                                }
+                                else {
+                                    resolve(object_1);
+                                    return [2];
+                                }
+                                break;
+                        }
+                        return [3, 6];
+                    case 1:
+                        obj = new context.cls();
+                        if (argument.$id) {
+                            subContext.addObjectForId(argument.$id, obj);
+                        }
+                        metadata = context.cls.prototype[serializable_1.METADATA_FIELD];
+                        promises = {};
+                        if (metadata) {
+                            for (metaKey in metadata) {
+                                if (metadata.hasOwnProperty(metaKey)) {
+                                    fieldMeta = metadata[metaKey];
+                                    promises[metaKey] = fieldMeta.serializer.deserialize(argument[metaKey], context);
+                                }
+                            }
+                        }
+                        _a = [];
+                        for (_b in promises)
+                            _a.push(_b);
+                        _i = 0;
+                        _e.label = 2;
+                    case 2:
+                        if (!(_i < _a.length)) return [3, 5];
+                        key = _a[_i];
+                        if (!promises.hasOwnProperty(key)) return [3, 4];
+                        _c = obj;
+                        _d = key;
+                        return [4, promises[key]];
+                    case 3:
+                        _c[_d] = _e.sent();
+                        _e.label = 4;
+                    case 4:
+                        _i++;
+                        return [3, 2];
+                    case 5:
+                        resolve(obj);
+                        return [2];
+                    case 6: return [2];
+                }
+            });
+        }); });
+    };
+    return ObjectSerializer;
+}(SerializerBase_1.SerializerBase));
+exports.ObjectSerializer = ObjectSerializer;
+function object() {
+    return new ObjectSerializer();
+}
+exports.default = object;
