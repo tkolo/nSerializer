@@ -108,7 +108,7 @@ export class ObjectSerializer extends SerializerBase {
         case ReferenceBehavior.Error:
           throw new Error(`Cyclic reference detected for object ${argument}`);
         case ReferenceBehavior.Ignore:
-          return null;
+          return undefined;
         case ReferenceBehavior.Serialize:
           let referencedDto = subContext.getDtoForId(id);
           referencedDto.$id = id.toString();
@@ -121,6 +121,11 @@ export class ObjectSerializer extends SerializerBase {
 
   public deserialize(argument: any, context: DeserializationContext): Promise<any> {
     return new Promise(async (resolve, reject) => {
+      if (!argument) {
+        resolve();
+        return;
+      }
+
       let subContext = context.getSubContext<ObjectDeserializationContext>(this);
       if (argument.$ref) {
         switch (context.referenceBehavior) {
@@ -128,12 +133,12 @@ export class ObjectSerializer extends SerializerBase {
             throw new Error('$ref encountered, but ref deserialization is set to Error');
             break;
           case ReferenceBehavior.Ignore:
-            resolve(null);
+            resolve();
             return;
           case ReferenceBehavior.Serialize:
             let id = argument.$ref;
             let object = subContext.getObjectForId(id);
-            if (object == null) {
+            if (!object) {
               subContext.onObjectAddedAdd((contextId, obj) => {
                 if (contextId === id)
                   resolve(obj);

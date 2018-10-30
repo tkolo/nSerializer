@@ -2,6 +2,7 @@ import SimpleDtoWithMeta from "../mocks/SimpleDtoWithMeta";
 import { defaultDeserializationSettingss, deserializeObject } from "../../src/nserializer";
 import SelfRerefencing from "../mocks/SelfRerefencing";
 import { ReferenceBehavior } from "../../src/core/context/ContextBase";
+import ComplexDtoWithMeta from "../mocks/ComplexDtoWithMeta";
 
 describe('Deserializer', () => {
   it('deserializers simple objects', async () => {
@@ -98,5 +99,16 @@ describe('Deserializer', () => {
       dto3
     ]);
 
+  });
+
+  it("deserializes object with null reference", async () => {
+    let dto = new ComplexDtoWithMeta();
+    dto.numberField = 5;
+    dto.subObject = undefined;
+
+    expect(await deserializeObject({
+      numberField: 5,
+      subObject: null
+    }, ComplexDtoWithMeta)).toEqual(dto);
   });
 });

@@ -176,7 +176,7 @@ var ObjectSerializer = (function (_super) {
                             case ContextBase_1.ReferenceBehavior.Error:
                                 throw new Error("Cyclic reference detected for object " + argument);
                             case ContextBase_1.ReferenceBehavior.Ignore:
-                                return [2, null];
+                                return [2, undefined];
                             case ContextBase_1.ReferenceBehavior.Serialize:
                                 referencedDto = subContext.getDtoForId(id);
                                 referencedDto.$id = id.toString();
@@ -197,6 +197,10 @@ var ObjectSerializer = (function (_super) {
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
+                        if (!argument) {
+                            resolve();
+                            return [2];
+                        }
                         subContext = context.getSubContext(this);
                         if (!argument.$ref) return [3, 1];
                         switch (context.referenceBehavior) {
@@ -204,12 +208,12 @@ var ObjectSerializer = (function (_super) {
                                 throw new Error('$ref encountered, but ref deserialization is set to Error');
                                 break;
                             case ContextBase_1.ReferenceBehavior.Ignore:
-                                resolve(null);
+                                resolve();
                                 return [2];
                             case ContextBase_1.ReferenceBehavior.Serialize:
                                 id_1 = argument.$ref;
                                 object_1 = subContext.getObjectForId(id_1);
-                                if (object_1 == null) {
+                                if (!object_1) {
                                     subContext.onObjectAddedAdd(function (contextId, obj) {
                                         if (contextId === id_1)
                                             resolve(obj);
