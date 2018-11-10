@@ -3,6 +3,7 @@ import { defaultDeserializationSettingss, deserializeObject } from "../../src/ns
 import SelfRerefencing from "../mocks/SelfRerefencing";
 import { ReferenceBehavior } from "../../src/core/context/ContextBase";
 import ComplexDtoWithMeta from "../mocks/ComplexDtoWithMeta";
+import DtoWithListMeta from "../mocks/DtoWithListMeta";
 
 describe('Deserializer', () => {
   it('deserializers simple objects', async () => {
@@ -111,4 +112,13 @@ describe('Deserializer', () => {
       subObject: null
     }, ComplexDtoWithMeta)).toEqual(dto);
   });
+
+  it("deserializes lists with null reference", async () => {
+    let dto = new DtoWithListMeta()
+    dto.name = "Test";
+
+    expect(await deserializeObject({
+      name: "Test"
+    }, DtoWithListMeta)).toEqual(dto);
+  })
 });

@@ -12,6 +12,10 @@ export class ListSerializer extends ContextlessSerializerBase {
   }
 
   public async serialize(argument: any, context: SerializationContext): Promise<any> {
+    if (!argument) {
+      return;
+    }
+
     let promises: Promise<any>[] = [];
     for (let val of argument) {
       promises.push(this.innerSerializer.serialize(val, context));
@@ -20,6 +24,10 @@ export class ListSerializer extends ContextlessSerializerBase {
   }
 
   public async deserialize(argument: any, context: DeserializationContext): Promise<any> {
+    if (!argument) {
+      return;
+    }
+
     let promises: Promise<any>[] = [];
     for (let val of argument) {
       promises.push(this.innerSerializer.deserialize(val, context));

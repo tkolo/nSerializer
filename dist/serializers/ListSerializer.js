@@ -62,6 +62,9 @@ var ListSerializer = (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        if (!argument) {
+                            return [2];
+                        }
                         promises = [];
                         for (_i = 0, argument_1 = argument; _i < argument_1.length; _i++) {
                             val = argument_1[_i];
@@ -79,6 +82,9 @@ var ListSerializer = (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        if (!argument) {
+                            return [2];
+                        }
                         promises = [];
                         for (_i = 0, argument_2 = argument; _i < argument_2.length; _i++) {
                             val = argument_2[_i];
