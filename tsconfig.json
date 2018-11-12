@@ -11,6 +11,8 @@
     "experimentalDecorators": true,
     "allowJs": false,
     "strict": true,
+    "sourceMap": true,
+    "importHelpers": true,
     "noImplicitReturns": true,
     "declaration": true,
     "lib": [

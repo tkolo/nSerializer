@@ -13,3 +13,4 @@ function serializable(serializer) {
     };
 }
 exports.default = serializable;
+//# sourceMappingURL=serializable.js.map

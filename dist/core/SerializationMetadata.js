@@ -13,3 +13,4 @@ var SerializationMetadata = (function () {
     return SerializationMetadata;
 }());
 exports.default = SerializationMetadata;
+//# sourceMappingURL=SerializationMetadata.js.map
