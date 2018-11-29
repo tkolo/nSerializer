@@ -5,7 +5,7 @@ import object from "../serializers/ObjectSerializer";
 import SerializationContext from "./context/SerializationContext";
 import DeserializationContext from "./context/DeserializationContext";
 
-export function guessSerializer(value: any, type: new () => any): ISerializer {
+export function guessSerializer(value: any, type: Function): ISerializer {
   switch (typeof value) {
     case "string":
     case "number":

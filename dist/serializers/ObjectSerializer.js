@@ -148,6 +148,12 @@ var ObjectSerializer = (function (_super) {
             });
         });
     };
+    ObjectSerializer.prototype.createInstance = function (cls) {
+        var a = function () {
+        };
+        a.prototype = cls.prototype;
+        return new a();
+    };
     ObjectSerializer.prototype.deserialize = function (argument, context) {
         var _this = this;
         return new Promise(function (resolve, reject) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
@@ -184,7 +190,7 @@ var ObjectSerializer = (function (_super) {
                         }
                         return [3, 6];
                     case 1:
-                        obj = new this.cls();
+                        obj = this.createInstance(this.cls);
                         if (argument.$id) {
                             subContext.addObjectForId(argument.$id, obj);
                         }

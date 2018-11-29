@@ -60,10 +60,10 @@ class ObjectDeserializationContext implements ISubContext {
 
 export class ObjectSerializer extends SerializerBase {
 
-  private readonly cls: new () => any;
+  private readonly cls: Function;
 
 
-  constructor(cls: { new(): any }) {
+  constructor(cls: Function) {
     super();
     this.cls = cls;
   }
@@ -131,6 +131,13 @@ export class ObjectSerializer extends SerializerBase {
     }
   }
 
+  private createInstance(cls: Function): any {
+    const a: any = function () {
+    };
+    a.prototype = cls.prototype;
+    return new a();
+  }
+
   public deserialize(argument: any, context: DeserializationContext): Promise<any> {
     return new Promise(async (resolve, reject) => {
       if (!argument) {
@@ -161,7 +168,7 @@ export class ObjectSerializer extends SerializerBase {
             break;
         }
       } else {
-        let obj = new this.cls();
+        let obj = this.createInstance(this.cls);
         if (argument.$id) {
           subContext.addObjectForId(argument.$id, obj);
         }
@@ -190,6 +197,6 @@ export class ObjectSerializer extends SerializerBase {
   }
 }
 
-export default function object(cls: new () => any) {
+export default function object(cls: Function) {
   return new ObjectSerializer(cls);
 }

@@ -3,10 +3,10 @@ import ISerializer from "../../serializers/ISerializer";
 import ISubContext from "./ISubContext";
 
 export default class DeserializationContext extends ContextBase {
-  public referenceBehavior!: ReferenceBehavior
-  public cls?: new () => any;
+  public referenceBehavior!: ReferenceBehavior;
+  public cls?: Function;
 
-  constructor(cls?: new () => any) {
+  constructor(cls?: Function) {
     super();
     this.cls = cls;
   }
