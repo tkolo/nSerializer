@@ -60,6 +60,14 @@ class ObjectDeserializationContext implements ISubContext {
 
 export class ObjectSerializer extends SerializerBase {
 
+  private readonly cls: new () => any;
+
+
+  constructor(cls: { new(): any }) {
+    super();
+    this.cls = cls;
+  }
+
   public createDeserializationSubContext(): ObjectDeserializationContext {
     return new ObjectDeserializationContext();
   }
@@ -94,7 +102,7 @@ export class ObjectSerializer extends SerializerBase {
         for (let key in argument) {
           // noinspection JSUnfilteredForInLoop
           let value = argument[key];
-          let serializer = guessSerializer(value);
+          let serializer = guessSerializer(value, (value && value.constructor) || Object);
           // noinspection JSUnfilteredForInLoop
           promises[key] = await serializer.serialize(value, context);
         }
@@ -135,7 +143,6 @@ export class ObjectSerializer extends SerializerBase {
         switch (context.referenceBehavior) {
           case ReferenceBehavior.Error:
             throw new Error('$ref encountered, but ref deserialization is set to Error');
-            break;
           case ReferenceBehavior.Ignore:
             resolve();
             return;
@@ -154,12 +161,12 @@ export class ObjectSerializer extends SerializerBase {
             break;
         }
       } else {
-        let obj = new context.cls!();
+        let obj = new this.cls();
         if (argument.$id) {
           subContext.addObjectForId(argument.$id, obj);
         }
 
-        let metadata: SerializationMetadata = context.cls!.prototype[METADATA_FIELD];
+        let metadata: SerializationMetadata = this.cls.prototype[METADATA_FIELD];
         let promises: { [key: string]: Promise<any> } = {};
         if (metadata) {
           for (let metaKey in metadata) {
@@ -183,6 +190,6 @@ export class ObjectSerializer extends SerializerBase {
   }
 }
 
-export default function object() {
-  return new ObjectSerializer();
+export default function object(cls: new () => any) {
+  return new ObjectSerializer(cls);
 }

@@ -4,7 +4,7 @@ var tslib_1 = require("tslib");
 var PrimitiveSerializer_1 = require("../serializers/PrimitiveSerializer");
 var ListSerializer_1 = require("../serializers/ListSerializer");
 var ObjectSerializer_1 = require("../serializers/ObjectSerializer");
-function guessSerializer(value) {
+function guessSerializer(value, type) {
     switch (typeof value) {
         case "string":
         case "number":
@@ -18,12 +18,12 @@ function guessSerializer(value) {
                     inner = PrimitiveSerializer_1.default();
                 }
                 else {
-                    inner = guessSerializer(value[0]);
+                    inner = guessSerializer(value[0], type);
                 }
                 return ListSerializer_1.default(inner);
             }
             else {
-                return ObjectSerializer_1.default();
+                return ObjectSerializer_1.default(type);
             }
     }
 }
@@ -32,7 +32,7 @@ function serializeInternal(object, context) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4, guessSerializer(object).serialize(object, context)];
+                case 0: return [4, guessSerializer(object, (object && object.constructor) || Object).serialize(object, context)];
                 case 1: return [2, _a.sent()];
             }
         });
@@ -43,7 +43,7 @@ function deserializeInternal(dto, context) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4, guessSerializer(dto).deserialize(dto, context)];
+                case 0: return [4, guessSerializer(dto, context.cls || Object).deserialize(dto, context)];
                 case 1: return [2, _a.sent()];
             }
         });

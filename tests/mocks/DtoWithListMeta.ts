@@ -9,6 +9,6 @@ export default class DtoWithListMeta {
   @serializable(primitive())
   public name?: string;
 
-  @serializable(list(object()))
+  @serializable(list(object(SimpleDtoWithMeta)))
   public objects?: SimpleDtoWithMeta[]
 }

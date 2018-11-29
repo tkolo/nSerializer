@@ -12,10 +12,14 @@ declare class ObjectDeserializationContext implements ISubContext {
     private triggerOnObjectAdded;
 }
 export declare class ObjectSerializer extends SerializerBase {
+    private readonly cls;
+    constructor(cls: {
+        new (): any;
+    });
     createDeserializationSubContext(): ObjectDeserializationContext;
     createSerializationSubContext(): any;
     serialize(argument: any, context: SerializationContext): Promise<any>;
     deserialize(argument: any, context: DeserializationContext): Promise<any>;
 }
-export default function object(): ObjectSerializer;
+export default function object(cls: new () => any): ObjectSerializer;
 export {};

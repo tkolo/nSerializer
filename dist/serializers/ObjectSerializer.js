@@ -54,8 +54,10 @@ var ObjectDeserializationContext = (function () {
 }());
 var ObjectSerializer = (function (_super) {
     tslib_1.__extends(ObjectSerializer, _super);
-    function ObjectSerializer() {
-        return _super !== null && _super.apply(this, arguments) || this;
+    function ObjectSerializer(cls) {
+        var _this = _super.call(this) || this;
+        _this.cls = cls;
+        return _this;
     }
     ObjectSerializer.prototype.createDeserializationSubContext = function () {
         return new ObjectDeserializationContext();
@@ -97,7 +99,7 @@ var ObjectSerializer = (function (_super) {
                         if (!(_i < _a.length)) return [3, 4];
                         key = _a[_i];
                         value = argument[key];
-                        serializer = Serializer_1.guessSerializer(value);
+                        serializer = Serializer_1.guessSerializer(value, (value && value.constructor) || Object);
                         _c = promises;
                         _d = key;
                         return [4, serializer.serialize(value, context)];
@@ -162,7 +164,6 @@ var ObjectSerializer = (function (_super) {
                         switch (context.referenceBehavior) {
                             case ContextBase_1.ReferenceBehavior.Error:
                                 throw new Error('$ref encountered, but ref deserialization is set to Error');
-                                break;
                             case ContextBase_1.ReferenceBehavior.Ignore:
                                 resolve();
                                 return [2];
@@ -183,11 +184,11 @@ var ObjectSerializer = (function (_super) {
                         }
                         return [3, 6];
                     case 1:
-                        obj = new context.cls();
+                        obj = new this.cls();
                         if (argument.$id) {
                             subContext.addObjectForId(argument.$id, obj);
                         }
-                        metadata = context.cls.prototype[serializable_1.METADATA_FIELD];
+                        metadata = this.cls.prototype[serializable_1.METADATA_FIELD];
                         promises = {};
                         if (metadata) {
                             for (metaKey in metadata) {
@@ -226,8 +227,8 @@ var ObjectSerializer = (function (_super) {
     return ObjectSerializer;
 }(SerializerBase_1.SerializerBase));
 exports.ObjectSerializer = ObjectSerializer;
-function object() {
-    return new ObjectSerializer();
+function object(cls) {
+    return new ObjectSerializer(cls);
 }
 exports.default = object;
 //# sourceMappingURL=ObjectSerializer.js.map

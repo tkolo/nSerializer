@@ -20,6 +20,27 @@ describe('Deserializer', () => {
     }, SimpleDtoWithMeta)).toEqual(dto);
   });
 
+  it('deserializers complex objects', async () => {
+    let simpleDto = new SimpleDtoWithMeta();
+    simpleDto.stringField = "Test";
+    simpleDto.numberField = 123;
+    simpleDto.boolField = true;
+
+    let complexDto = new ComplexDtoWithMeta();
+    complexDto.numberField = 50;
+    complexDto.subObject = simpleDto;
+
+
+    expect(await deserializeObject({
+      numberField: 50,
+      subObject: {
+        stringField: "Test",
+        numberField: 123,
+        boolField: true
+      }
+    }, ComplexDtoWithMeta)).toEqual(complexDto);
+  });
+
   it('deserializes object graph with cycles', async () => {
     let dto = new SelfRerefencing();
     dto.id = 1;
