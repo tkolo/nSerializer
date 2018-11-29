@@ -22,7 +22,7 @@ export function guessSerializer(value: any, type: Function): ISerializer {
         }
         return list(inner);
       } else {
-        return object(type);
+        return object(() => type);
       }
   }
 }

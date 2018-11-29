@@ -26,25 +26,14 @@ describe('Deserializer', () => {
     simpleDto.numberField = 123;
     simpleDto.boolField = true;
 
-    let simpleDto2 = new SimpleDtoWithMeta();
-    simpleDto2.stringField = "Test";
-    simpleDto2.numberField = 123;
-    simpleDto2.boolField = true;
-
     let complexDto = new ComplexDtoWithMeta();
     complexDto.numberField = 50;
     complexDto.subObject = simpleDto;
-    complexDto.subObjectRef = simpleDto2;
 
 
     expect(await deserializeObject({
       numberField: 50,
       subObject: {
-        stringField: "Test",
-        numberField: 123,
-        boolField: true
-      },
-      subObjectRef: {
         stringField: "Test",
         numberField: 123,
         boolField: true

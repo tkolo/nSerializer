@@ -7,9 +7,6 @@ export default class ComplexDtoWithMeta {
   @serializable(primitive())
   public numberField: number = 0;
 
-  @serializable(object(SimpleDtoWithMeta))
+  @serializable(object(() => SimpleDtoWithMeta))
   public subObject?: SimpleDtoWithMeta;
-
-  @serializable(object(() => SimpleDtoWithMeta, true))
-  public subObjectRef?: SimpleDtoWithMeta;
 }

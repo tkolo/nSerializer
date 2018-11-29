@@ -60,12 +60,16 @@ class ObjectDeserializationContext implements ISubContext {
 
 export class ObjectSerializer extends SerializerBase {
 
-  private readonly cls: Function;
+  private readonly clsRef: () => Function;
+
+  private get cls(): Function {
+    return this.clsRef();
+  }
 
 
-  constructor(cls: Function) {
+  constructor(clsRef: () => Function) {
     super();
-    this.cls = cls;
+    this.clsRef = clsRef;
   }
 
   public createDeserializationSubContext(): ObjectDeserializationContext {
@@ -197,14 +201,6 @@ export class ObjectSerializer extends SerializerBase {
   }
 }
 
-export default function object(cls: Function, ref: boolean = false) {
-  if (ref) {
-    cls = cls();
-  }
-
-  if (!cls) {
-    throw new Error('Type is required');
-  }
-
-  return new ObjectSerializer(cls);
+export default function object(clsRef: () => Function) {
+  return new ObjectSerializer(clsRef);
 }

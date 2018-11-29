@@ -54,11 +54,18 @@ var ObjectDeserializationContext = (function () {
 }());
 var ObjectSerializer = (function (_super) {
     tslib_1.__extends(ObjectSerializer, _super);
-    function ObjectSerializer(cls) {
+    function ObjectSerializer(clsRef) {
         var _this = _super.call(this) || this;
-        _this.cls = cls;
+        _this.clsRef = clsRef;
         return _this;
     }
+    Object.defineProperty(ObjectSerializer.prototype, "cls", {
+        get: function () {
+            return this.clsRef();
+        },
+        enumerable: true,
+        configurable: true
+    });
     ObjectSerializer.prototype.createDeserializationSubContext = function () {
         return new ObjectDeserializationContext();
     };
@@ -233,15 +240,8 @@ var ObjectSerializer = (function (_super) {
     return ObjectSerializer;
 }(SerializerBase_1.SerializerBase));
 exports.ObjectSerializer = ObjectSerializer;
-function object(cls, ref) {
-    if (ref === void 0) { ref = false; }
-    if (ref) {
-        cls = cls();
-    }
-    if (!cls) {
-        throw new Error('Type is required');
-    }
-    return new ObjectSerializer(cls);
+function object(clsRef) {
+    return new ObjectSerializer(clsRef);
 }
 exports.default = object;
 //# sourceMappingURL=ObjectSerializer.js.map

@@ -9,6 +9,6 @@ export default class SelfRerefencing {
   @serializable(primitive())
   public name?: string;
 
-  @serializable(object(SelfRerefencing))
+  @serializable(object(() => SelfRerefencing))
   public ref?: SelfRerefencing;
 }

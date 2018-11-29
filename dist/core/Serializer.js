@@ -23,7 +23,7 @@ function guessSerializer(value, type) {
                 return ListSerializer_1.default(inner);
             }
             else {
-                return ObjectSerializer_1.default(type);
+                return ObjectSerializer_1.default(function () { return type; });
             }
     }
 }
