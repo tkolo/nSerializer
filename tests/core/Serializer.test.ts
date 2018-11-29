@@ -26,7 +26,13 @@ describe('Serializer', () => {
     simple.stringField = undefined;
     simple.numberField = 111;
     simple.boolField = true;
+
+    let simple2 = new SimpleDtoWithMeta();
+    simple2.stringField = "asd";
+    simple2.numberField = 454;
+    simple2.boolField = false;
     dto.subObject = simple;
+    dto.subObjectRef = simple2;
 
     expect(await serializeObject(dto)).toEqual({
       numberField: 7,
@@ -34,6 +40,11 @@ describe('Serializer', () => {
         stringField: undefined,
         numberField: 111,
         boolField: true
+      },
+      subObjectRef: {
+        stringField: "asd",
+        numberField: 454,
+        boolField: false
       }
     });
   });
@@ -70,7 +81,8 @@ describe('Serializer', () => {
           stringField: undefined,
           numberField: 111,
           boolField: true
-        }
+        },
+        subObjectRef: null
       },
       {
         stringField: "Test 2",

@@ -197,6 +197,9 @@ export class ObjectSerializer extends SerializerBase {
   }
 }
 
-export default function object(cls: Function) {
+export default function object(cls: Function, ref: boolean = false) {
+  if (ref) {
+    cls = cls();
+  }
   return new ObjectSerializer(cls);
 }

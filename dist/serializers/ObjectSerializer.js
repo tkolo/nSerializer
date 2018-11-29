@@ -233,7 +233,11 @@ var ObjectSerializer = (function (_super) {
     return ObjectSerializer;
 }(SerializerBase_1.SerializerBase));
 exports.ObjectSerializer = ObjectSerializer;
-function object(cls) {
+function object(cls, ref) {
+    if (ref === void 0) { ref = false; }
+    if (ref) {
+        cls = cls();
+    }
     return new ObjectSerializer(cls);
 }
 exports.default = object;

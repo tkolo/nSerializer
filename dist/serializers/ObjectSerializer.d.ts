@@ -20,5 +20,5 @@ export declare class ObjectSerializer extends SerializerBase {
     private createInstance;
     deserialize(argument: any, context: DeserializationContext): Promise<any>;
 }
-export default function object(cls: Function): ObjectSerializer;
+export default function object(cls: Function, ref?: boolean): ObjectSerializer;
 export {};
