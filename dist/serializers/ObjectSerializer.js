@@ -238,6 +238,9 @@ function object(cls, ref) {
     if (ref) {
         cls = cls();
     }
+    if (!cls) {
+        throw new Error('Type is required');
+    }
     return new ObjectSerializer(cls);
 }
 exports.default = object;

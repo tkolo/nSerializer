@@ -116,7 +116,8 @@ describe('Serializer', () => {
 
     expect(await serializeObject(dto)).toEqual({
       numberField: 7,
-      subObject: null
+      subObject: null,
+      subObjectRef: null
     });
   });
 });

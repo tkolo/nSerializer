@@ -201,5 +201,10 @@ export default function object(cls: Function, ref: boolean = false) {
   if (ref) {
     cls = cls();
   }
+
+  if (!cls) {
+    throw new Error('Type is required');
+  }
+
   return new ObjectSerializer(cls);
 }
