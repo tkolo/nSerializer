@@ -8,7 +8,7 @@ export enum ReferenceBehavior {
 }
 
 export default abstract class ContextBase {
-  private readonly subContexts: { [key: number]: any } = {};
+  protected subContexts: { [key: number]: any } = {};
 
   public getSubContext<T extends ISubContext>(serializer: ISerializer): T {
     let serializerId = serializer.getSerializerId();

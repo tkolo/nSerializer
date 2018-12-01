@@ -155,7 +155,7 @@ var ObjectSerializer = (function (_super) {
             });
         });
     };
-    ObjectSerializer.prototype.createInstance = function (cls) {
+    ObjectSerializer.createInstance = function (cls) {
         var a = function () {
         };
         a.prototype = cls.prototype;
@@ -164,7 +164,7 @@ var ObjectSerializer = (function (_super) {
     ObjectSerializer.prototype.deserialize = function (argument, context) {
         var _this = this;
         return new Promise(function (resolve, reject) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-            var subContext, id_1, object_1, obj, metadata, promises, metaKey, fieldMeta, _a, _b, _i, key, _c, _d;
+            var subContext, id_1, object_1, obj, metadata, promises, metaKey, fieldMeta, childContext, _a, _b, _i, key, _c, _d;
             return tslib_1.__generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -197,7 +197,7 @@ var ObjectSerializer = (function (_super) {
                         }
                         return [3, 6];
                     case 1:
-                        obj = this.createInstance(this.cls);
+                        obj = context.obj || ObjectSerializer.createInstance(this.cls);
                         if (argument.$id) {
                             subContext.addObjectForId(argument.$id, obj);
                         }
@@ -206,8 +206,11 @@ var ObjectSerializer = (function (_super) {
                         if (metadata) {
                             for (metaKey in metadata) {
                                 if (metadata.hasOwnProperty(metaKey)) {
+                                    if (!(metaKey in argument))
+                                        continue;
                                     fieldMeta = metadata[metaKey];
-                                    promises[metaKey] = fieldMeta.serializer.deserialize(argument[metaKey], context);
+                                    childContext = context.createChildContext(obj[metaKey]);
+                                    promises[metaKey] = fieldMeta.serializer.deserialize(argument[metaKey], childContext);
                                 }
                             }
                         }

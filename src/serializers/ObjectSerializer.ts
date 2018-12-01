@@ -135,7 +135,7 @@ export class ObjectSerializer extends SerializerBase {
     }
   }
 
-  private createInstance(cls: Function): any {
+  private static createInstance(cls: Function): any {
     const a: any = function () {
     };
     a.prototype = cls.prototype;
@@ -172,7 +172,7 @@ export class ObjectSerializer extends SerializerBase {
             break;
         }
       } else {
-        let obj = this.createInstance(this.cls);
+        let obj = context.obj || ObjectSerializer.createInstance(this.cls);
         if (argument.$id) {
           subContext.addObjectForId(argument.$id, obj);
         }
@@ -182,8 +182,11 @@ export class ObjectSerializer extends SerializerBase {
         if (metadata) {
           for (let metaKey in metadata) {
             if (metadata.hasOwnProperty(metaKey)) {
-              let fieldMeta = metadata[metaKey];
-              promises[metaKey] = fieldMeta.serializer.deserialize(argument[metaKey], context);
+              if (!(metaKey in argument))
+                continue;
+              const fieldMeta = metadata[metaKey];
+              const childContext = context.createChildContext(obj[metaKey]);
+              promises[metaKey] = fieldMeta.serializer.deserialize(argument[metaKey], childContext);
             }
           }
         }

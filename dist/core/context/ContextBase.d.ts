@@ -6,7 +6,9 @@ export declare enum ReferenceBehavior {
     Serialize = 2
 }
 export default abstract class ContextBase {
-    private readonly subContexts;
+    protected subContexts: {
+        [key: number]: any;
+    };
     getSubContext<T extends ISubContext>(serializer: ISerializer): T;
     protected abstract createSubContext<T extends ISubContext>(serializer: ISerializer): T;
 }

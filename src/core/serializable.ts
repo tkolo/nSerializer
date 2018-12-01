@@ -1,7 +1,7 @@
 import ISerializer from "../serializers/ISerializer";
 import SerializationMetadata, { FieldMetadata } from "./SerializationMetadata";
 
-export const METADATA_FIELD = "$$nSerializerMeta$$";
+export const METADATA_FIELD = Symbol("$nSerializerMeta$$");
 
 export default function serializable(serializer: ISerializer): (target: any, propertyKey: string) => void {
   return function (target: any, propertyKey: string): void {

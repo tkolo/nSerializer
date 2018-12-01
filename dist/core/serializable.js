@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var SerializationMetadata_1 = require("./SerializationMetadata");
-exports.METADATA_FIELD = "$$nSerializerMeta$$";
+exports.METADATA_FIELD = Symbol("$nSerializerMeta$$");
 function serializable(serializer) {
     return function (target, propertyKey) {
         var metadata = target[exports.METADATA_FIELD];

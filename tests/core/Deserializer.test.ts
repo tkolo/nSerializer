@@ -1,5 +1,5 @@
 import SimpleDtoWithMeta from "../mocks/SimpleDtoWithMeta";
-import { defaultDeserializationSettingss, deserializeObject } from "../../src/nserializer";
+import { defaultDeserializationSettingss, deserializeObject, populateObject } from "../../src/nserializer";
 import SelfRerefencing from "../mocks/SelfRerefencing";
 import { ReferenceBehavior } from "../../src/core/context/ContextBase";
 import ComplexDtoWithMeta from "../mocks/ComplexDtoWithMeta";
@@ -39,6 +39,36 @@ describe('Deserializer', () => {
         boolField: true
       }
     }, ComplexDtoWithMeta)).toEqual(complexDto);
+  });
+
+  it('populates complex objects', async () => {
+    let simpleDto = new SimpleDtoWithMeta();
+    simpleDto.stringField = "Test";
+    simpleDto.boolField = true;
+
+    let complexDto = new ComplexDtoWithMeta();
+    complexDto.numberField = 50;
+    complexDto.subObject = simpleDto;
+
+    let simpleDto2 = new SimpleDtoWithMeta();
+    simpleDto2.stringField = "Test";
+    simpleDto2.numberField = 123;
+    simpleDto2.boolField = true;
+
+    let complexDto2 = new ComplexDtoWithMeta();
+    complexDto2.numberField = 50;
+    complexDto2.subObject = simpleDto2;
+
+    let result = await populateObject(complexDto, {
+      subObject: {
+        numberField: 123,
+        boolField: true
+      }
+    });
+
+    expect(result).toBe(complexDto);
+    expect(result.subObject).toBe(simpleDto);
+    expect(complexDto).toEqual(complexDto2);
   });
 
   it('deserializes object graph with cycles', async () => {

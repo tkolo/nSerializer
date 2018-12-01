@@ -2,8 +2,10 @@ import ContextBase, { ReferenceBehavior } from "./ContextBase";
 import ISerializer from "../../serializers/ISerializer";
 import ISubContext from "./ISubContext";
 export default class DeserializationContext extends ContextBase {
-    referenceBehavior: ReferenceBehavior;
-    cls?: Function;
-    constructor(cls?: Function);
+    readonly referenceBehavior: ReferenceBehavior;
+    readonly cls?: Function;
+    readonly obj?: any;
+    constructor(cls?: Function, referenceBehavior?: ReferenceBehavior, obj?: any);
+    createChildContext(obj: any): DeserializationContext;
     protected createSubContext<T extends ISubContext>(serializer: ISerializer): T;
 }

@@ -14,14 +14,12 @@ exports.defaultDeserializationSettingss = {
 };
 function serializeObject(object, settings) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var context, mergedSettings;
+        var mergedSettings, context;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    context = new SerializationContext_1.default();
                     mergedSettings = tslib_1.__assign({}, exports.defaultSerializationSettings, settings);
-                    context.allowDynamic = mergedSettings.allowDynamic;
-                    context.referenceBehavior = mergedSettings.referenceBehavior;
+                    context = new SerializationContext_1.default(mergedSettings.allowDynamic, mergedSettings.referenceBehavior);
                     return [4, Serializer_1.serializeInternal(object, context)];
                 case 1: return [2, _a.sent()];
             }
@@ -29,20 +27,34 @@ function serializeObject(object, settings) {
     });
 }
 exports.serializeObject = serializeObject;
-function deserializeObject(input, cls, settings) {
+function deserializeObject(object, cls, settings) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var context, mergedSettings;
+        var mergedSettings, context;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    context = new DeserializationContext_1.default(cls);
                     mergedSettings = tslib_1.__assign({}, exports.defaultDeserializationSettingss, settings);
-                    context.referenceBehavior = mergedSettings.referenceBehavior;
-                    return [4, Serializer_1.deserializeInternal(input, context)];
+                    context = new DeserializationContext_1.default(cls, mergedSettings.referenceBehavior);
+                    return [4, Serializer_1.deserializeInternal(object, context)];
                 case 1: return [2, _a.sent()];
             }
         });
     });
 }
 exports.deserializeObject = deserializeObject;
+function populateObject(object, dto, settings) {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
+        var mergedSettings, context;
+        return tslib_1.__generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    mergedSettings = tslib_1.__assign({}, exports.defaultDeserializationSettingss, settings);
+                    context = new DeserializationContext_1.default(object.constructor, mergedSettings.referenceBehavior, object);
+                    return [4, Serializer_1.deserializeInternal(dto, context)];
+                case 1: return [2, _a.sent()];
+            }
+        });
+    });
+}
+exports.populateObject = populateObject;
 //# sourceMappingURL=nserializer.js.map

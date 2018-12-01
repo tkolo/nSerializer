@@ -22,17 +22,19 @@ export var defaultDeserializationSettingss: DeserializationSettings = {
 };
 
 export async function serializeObject(object: any, settings?: Partial<SerializationSettings>): Promise<any> {
-  let context = new SerializationContext();
-  let mergedSettings = {...defaultSerializationSettings, ...settings};
-  context.allowDynamic = mergedSettings.allowDynamic;
-  context.referenceBehavior = mergedSettings.referenceBehavior;
-
+  const mergedSettings = {...defaultSerializationSettings, ...settings};
+  const context = new SerializationContext(mergedSettings.allowDynamic, mergedSettings.referenceBehavior);
   return await serializeInternal(object, context)
 }
 
-export async function deserializeObject<T>(input: any, cls?: new () => T, settings?: Partial<DeserializationSettings>): Promise<T> {
-  let context = new DeserializationContext(cls);
-  let mergedSettings = {...defaultDeserializationSettingss, ...settings};
-  context.referenceBehavior = mergedSettings.referenceBehavior;
-  return await deserializeInternal<T>(input, context);
+export async function deserializeObject<T>(object: any, cls?: new () => T, settings?: Partial<DeserializationSettings>): Promise<T> {
+  const mergedSettings = {...defaultDeserializationSettingss, ...settings};
+  const context = new DeserializationContext(cls, mergedSettings.referenceBehavior);
+  return await deserializeInternal<T>(object, context);
+}
+
+export async function populateObject<T>(object: T, dto: any, settings?: Partial<DeserializationSettings>): Promise<T> {
+  const mergedSettings = {...defaultDeserializationSettingss, ...settings};
+  const context = new DeserializationContext(object.constructor, mergedSettings.referenceBehavior, object);
+  return await deserializeInternal<T>(dto, context);
 }

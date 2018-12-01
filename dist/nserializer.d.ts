@@ -9,4 +9,5 @@ export interface DeserializationSettings {
 export declare var defaultSerializationSettings: SerializationSettings;
 export declare var defaultDeserializationSettingss: DeserializationSettings;
 export declare function serializeObject(object: any, settings?: Partial<SerializationSettings>): Promise<any>;
-export declare function deserializeObject<T>(input: any, cls?: new () => T, settings?: Partial<DeserializationSettings>): Promise<T>;
+export declare function deserializeObject<T>(object: any, cls?: new () => T, settings?: Partial<DeserializationSettings>): Promise<T>;
+export declare function populateObject<T>(object: T, dto: any, settings?: Partial<DeserializationSettings>): Promise<T>;
