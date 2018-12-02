@@ -27,14 +27,14 @@ export async function serializeObject(object: any, settings?: Partial<Serializat
   return await serializeInternal(object, context)
 }
 
-export async function deserializeObject<T>(object: any, cls?: new () => T, settings?: Partial<DeserializationSettings>): Promise<T> {
+export async function deserializeObject<T>(object: any, cls?: Function, settings?: Partial<DeserializationSettings>): Promise<T> {
   const mergedSettings = {...defaultDeserializationSettingss, ...settings};
   const context = new DeserializationContext(cls, mergedSettings.referenceBehavior);
   return await deserializeInternal<T>(object, context);
 }
 
-export async function populateObject<T>(object: T, dto: any, settings?: Partial<DeserializationSettings>): Promise<T> {
+export async function populateObject<T>(object: T, dto: any, cls?: Function, settings?: Partial<DeserializationSettings>): Promise<T> {
   const mergedSettings = {...defaultDeserializationSettingss, ...settings};
-  const context = new DeserializationContext(object.constructor, mergedSettings.referenceBehavior, object);
+  const context = new DeserializationContext(cls || object.constructor, mergedSettings.referenceBehavior, object);
   return await deserializeInternal<T>(dto, context);
 }

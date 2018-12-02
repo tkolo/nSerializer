@@ -31,7 +31,7 @@ var ListSerializer = (function (_super) {
     };
     ListSerializer.prototype.deserialize = function (argument, context) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var promises, _i, argument_2, val;
+            var promises, obj, i, childContext, newObjects, i, _i, argument_2, val;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -39,12 +39,29 @@ var ListSerializer = (function (_super) {
                             return [2];
                         }
                         promises = [];
-                        for (_i = 0, argument_2 = argument; _i < argument_2.length; _i++) {
-                            val = argument_2[_i];
-                            promises.push(this.innerSerializer.deserialize(val, context));
+                        obj = context.obj;
+                        if (!obj) return [3, 2];
+                        if (obj.length > argument.length) {
+                            obj.splice(argument.length, obj.length - argument.length);
+                        }
+                        for (i = 0; i < argument.length; i++) {
+                            childContext = context.createChildContext(obj[i]);
+                            promises.push(this.innerSerializer.deserialize(argument[i], childContext));
                         }
                         return [4, Promise.all(promises)];
-                    case 1: return [2, _a.sent()];
+                    case 1:
+                        newObjects = _a.sent();
+                        for (i = obj.length; i < newObjects.length; i++) {
+                            obj.push(newObjects[i]);
+                        }
+                        return [2, obj];
+                    case 2:
+                        for (_i = 0, argument_2 = argument; _i < argument_2.length; _i++) {
+                            val = argument_2[_i];
+                            promises.push(this.innerSerializer.deserialize(val, context.createChildContext()));
+                        }
+                        return [4, Promise.all(promises)];
+                    case 3: return [2, _a.sent()];
                 }
             });
         });

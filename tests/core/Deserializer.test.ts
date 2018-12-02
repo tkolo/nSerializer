@@ -153,6 +153,194 @@ describe('Deserializer', () => {
 
   });
 
+  it('populates object graph with cycles', async () => {
+    let dto = new SelfRerefencing();
+    dto.id = 1;
+    dto.name = "Test";
+
+    let dto2 = new SelfRerefencing();
+    dto2.id = 2;
+    dto2.name = "Test 2";
+
+    let dto3 = new SelfRerefencing();
+    dto3.id = 3;
+    dto3.name = "Test 3";
+    dto3.ref = dto2;
+
+    dto2.ref = dto3;
+
+    let dto4 = new SelfRerefencing();
+    dto4.id = 1;
+    dto4.name = "Test";
+    dto4.ref = dto4;
+
+    let dto5 = new SelfRerefencing();
+    dto5.id = 2;
+    dto5.name = "Test 2";
+
+    let dto6 = new SelfRerefencing();
+    dto6.id = 3;
+    dto6.name = "Test 3";
+    dto6.ref = dto5;
+
+    dto5.ref = dto6;
+
+    let dtoArr1: SelfRerefencing[] = [];
+
+    let dtoArr2 = [
+      dto4,
+      dto5,
+      dto6
+    ];
+
+    defaultDeserializationSettingss.referenceBehavior = ReferenceBehavior.Serialize;
+
+    let populated1 = await populateObject(dto, {
+      $id: "1",
+      ref: {
+        $ref: "1"
+      }
+    });
+
+    expect(populated1).toBe(dto);
+    expect(dto.ref).toBe(dto);
+
+    await populateObject(dtoArr1, [
+      {
+        $id: "1",
+        id: 1,
+        name: "Test",
+        ref: {
+          $ref: "1"
+        }
+      },
+      {
+        $id: "2",
+        id: 2,
+        name: "Test 2",
+        ref: {
+          $ref: "3"
+        }
+      },
+      {
+        $id: "3",
+        id: 3,
+        name: "Test 3",
+        ref: {
+          $ref: "2"
+        }
+      }
+    ], SelfRerefencing);
+
+    expect(dtoArr1).toEqual(dtoArr2);
+
+    dtoArr1 = [
+      dto,
+      dto2
+    ];
+
+    await populateObject(dtoArr1, [
+      {
+        $id: "1",
+        id: 1,
+        name: "Test",
+        ref: {
+          $ref: "1"
+        }
+      },
+      {
+        $id: "2",
+        id: 2,
+        name: "Test 2",
+        ref: {
+          $ref: "3"
+        }
+      },
+      {
+        $id: "3",
+        id: 3,
+        name: "Test 3",
+        ref: {
+          $ref: "2"
+        }
+      }
+    ], SelfRerefencing);
+
+    expect(dtoArr1).toEqual(dtoArr2);
+
+    dtoArr1 = [
+      dto,
+      dto2,
+      dto3,
+      dto4
+    ];
+
+    await populateObject(dtoArr1, [
+      {
+        $id: "1",
+        id: 1,
+        name: "Test",
+        ref: {
+          $ref: "1"
+        }
+      },
+      {
+        $id: "2",
+        id: 2,
+        name: "Test 2",
+        ref: {
+          $ref: "3"
+        }
+      },
+      {
+        $id: "3",
+        id: 3,
+        name: "Test 3",
+        ref: {
+          $ref: "2"
+        }
+      }
+    ], SelfRerefencing);
+
+    expect(dtoArr1).toEqual(dtoArr2);
+
+    dtoArr1 = [
+      new SelfRerefencing(),
+      new SelfRerefencing()
+    ];
+
+    await populateObject(dtoArr1, [
+      {
+        $id: "1",
+        id: 1,
+        name: "Test",
+        ref: {
+          $ref: "1"
+        }
+      },
+      {
+        $id: "2",
+        id: 2,
+        name: "Test 2",
+        ref: {
+          $ref: "3"
+        }
+      },
+      {
+        $id: "3",
+        id: 3,
+        name: "Test 3",
+        ref: {
+          $ref: "2"
+        }
+      }
+    ], SelfRerefencing);
+
+    expect(dtoArr1).toEqual(dtoArr2);
+
+
+  });
+
   it("deserializes object with null reference", async () => {
     let dto = new ComplexDtoWithMeta();
     dto.numberField = 5;

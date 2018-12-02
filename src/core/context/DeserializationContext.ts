@@ -15,7 +15,7 @@ export default class DeserializationContext extends ContextBase {
     this.obj = obj;
   }
 
-  public createChildContext(obj: any): DeserializationContext {
+  public createChildContext(obj?: any): DeserializationContext {
     const result = new DeserializationContext(this.cls, this.referenceBehavior, obj);
     result.subContexts = this.subContexts;
     return result;

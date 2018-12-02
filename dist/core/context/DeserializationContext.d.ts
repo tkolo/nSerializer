@@ -6,6 +6,6 @@ export default class DeserializationContext extends ContextBase {
     readonly cls?: Function;
     readonly obj?: any;
     constructor(cls?: Function, referenceBehavior?: ReferenceBehavior, obj?: any);
-    createChildContext(obj: any): DeserializationContext;
+    createChildContext(obj?: any): DeserializationContext;
     protected createSubContext<T extends ISubContext>(serializer: ISerializer): T;
 }

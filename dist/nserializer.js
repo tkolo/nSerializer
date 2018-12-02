@@ -42,14 +42,14 @@ function deserializeObject(object, cls, settings) {
     });
 }
 exports.deserializeObject = deserializeObject;
-function populateObject(object, dto, settings) {
+function populateObject(object, dto, cls, settings) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         var mergedSettings, context;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     mergedSettings = tslib_1.__assign({}, exports.defaultDeserializationSettingss, settings);
-                    context = new DeserializationContext_1.default(object.constructor, mergedSettings.referenceBehavior, object);
+                    context = new DeserializationContext_1.default(cls || object.constructor, mergedSettings.referenceBehavior, object);
                     return [4, Serializer_1.deserializeInternal(dto, context)];
                 case 1: return [2, _a.sent()];
             }
