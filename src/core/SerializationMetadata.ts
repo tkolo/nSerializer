@@ -10,5 +10,7 @@ export class FieldMetadata {
 }
 
 export default class SerializationMetadata {
-  [key: string]: FieldMetadata
+  fields: { [key: string]: FieldMetadata } = {};
+
+  public converter?: (dto: any) => any;
 }

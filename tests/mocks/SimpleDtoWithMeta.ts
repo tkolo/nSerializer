@@ -1,8 +1,10 @@
-import serializable from "../../src/core/serializable";
+import serializable, { Direction } from "../../src/core/serializable";
 import primitive from "../../src/serializers/PrimitiveSerializer";
+import converter from "../../src/core/converter";
 
+@converter((dto) => new SimpleDtoWithMeta(dto.stringField))
 export default class SimpleDtoWithMeta {
-  @serializable(primitive())
+  @serializable(primitive(), Direction.OnlySerialize)
   public stringField?: string;
 
   @serializable(primitive())
@@ -10,4 +12,9 @@ export default class SimpleDtoWithMeta {
 
   @serializable(primitive())
   public boolField?: boolean;
+
+
+  constructor(stringField?: string) {
+    this.stringField = stringField;
+  }
 }

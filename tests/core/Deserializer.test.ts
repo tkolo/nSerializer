@@ -7,8 +7,7 @@ import DtoWithListMeta from "../mocks/DtoWithListMeta";
 
 describe('Deserializer', () => {
   it('deserializers simple objects', async () => {
-    let dto = new SimpleDtoWithMeta();
-    dto.stringField = "Test";
+    let dto = new SimpleDtoWithMeta("Test");
     dto.numberField = 123;
     dto.boolField = true;
 
@@ -21,8 +20,7 @@ describe('Deserializer', () => {
   });
 
   it('deserializers complex objects', async () => {
-    let simpleDto = new SimpleDtoWithMeta();
-    simpleDto.stringField = "Test";
+    let simpleDto = new SimpleDtoWithMeta("Test");
     simpleDto.numberField = 123;
     simpleDto.boolField = true;
 
@@ -42,16 +40,14 @@ describe('Deserializer', () => {
   });
 
   it('populates complex objects', async () => {
-    let simpleDto = new SimpleDtoWithMeta();
-    simpleDto.stringField = "Test";
+    let simpleDto = new SimpleDtoWithMeta("Test");
     simpleDto.boolField = true;
 
     let complexDto = new ComplexDtoWithMeta();
     complexDto.numberField = 50;
     complexDto.subObject = simpleDto;
 
-    let simpleDto2 = new SimpleDtoWithMeta();
-    simpleDto2.stringField = "Test";
+    let simpleDto2 = new SimpleDtoWithMeta("Test");
     simpleDto2.numberField = 123;
     simpleDto2.boolField = true;
 

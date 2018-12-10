@@ -6,8 +6,7 @@ import { ReferenceBehavior } from "../../src/core/context/ContextBase";
 
 describe('Serializer', () => {
   it('serializes simple object with metadata', async () => {
-    let dto = new SimpleDtoWithMeta();
-    dto.stringField = "Test";
+    let dto = new SimpleDtoWithMeta("Test");
     dto.numberField = 123;
     dto.boolField = true;
 
@@ -23,7 +22,6 @@ describe('Serializer', () => {
     let dto = new ComplexDtoWithMeta();
     dto.numberField = 7;
     let simple = new SimpleDtoWithMeta();
-    simple.stringField = undefined;
     simple.numberField = 111;
     simple.boolField = true;
 

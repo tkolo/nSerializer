@@ -94,9 +94,9 @@ export class ObjectSerializer extends SerializerBase {
       subContext.addAndAssignId(argument, dto);
       let promises: { [key: string]: Promise<any> } = {};
       if (metadata) {
-        for (let metaKey in metadata) {
-          if (metadata.hasOwnProperty(metaKey)) {
-            let fieldMeta = metadata[metaKey];
+        for (let metaKey in metadata.fields) {
+          if (metadata.fields.hasOwnProperty(metaKey)) {
+            let fieldMeta = metadata.fields[metaKey];
             promises[metaKey] = fieldMeta.serializer.serialize(argument[metaKey], context);
           }
         }
@@ -135,11 +135,11 @@ export class ObjectSerializer extends SerializerBase {
     }
   }
 
-  private static createInstance(cls: Function): any {
-    const a: any = function () {
+  private static createInstance<T>(cls: Function): T {
+    var a: any = () => {
     };
     a.prototype = cls.prototype;
-    return new a();
+    return new a() as T;
   }
 
   public deserialize(argument: any, context: DeserializationContext): Promise<any> {
@@ -172,19 +172,26 @@ export class ObjectSerializer extends SerializerBase {
             break;
         }
       } else {
-        let obj = context.obj || ObjectSerializer.createInstance(this.cls);
+        const metadata: SerializationMetadata = this.cls.prototype[METADATA_FIELD];
+        let obj = context.obj;
+        if (!obj) {
+          if (metadata.converter) {
+            obj = metadata.converter(argument);
+          } else {
+            obj = ObjectSerializer.createInstance(this.cls);
+          }
+        }
         if (argument.$id) {
           subContext.addObjectForId(argument.$id, obj);
         }
 
-        let metadata: SerializationMetadata = this.cls.prototype[METADATA_FIELD];
         let promises: { [key: string]: Promise<any> } = {};
         if (metadata) {
-          for (let metaKey in metadata) {
-            if (metadata.hasOwnProperty(metaKey)) {
+          for (let metaKey in metadata.fields) {
+            if (metadata.fields.hasOwnProperty(metaKey)) {
               if (!(metaKey in argument))
                 continue;
-              const fieldMeta = metadata[metaKey];
+              const fieldMeta = metadata.fields[metaKey];
               const childContext = context.createChildContext(obj[metaKey]);
               promises[metaKey] = fieldMeta.serializer.deserialize(argument[metaKey], childContext);
             }

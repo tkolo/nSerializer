@@ -4,5 +4,8 @@ export declare class FieldMetadata {
     constructor(serializer: ISerializer);
 }
 export default class SerializationMetadata {
-    [key: string]: FieldMetadata;
+    fields: {
+        [key: string]: FieldMetadata;
+    };
+    converter?: (dto: any) => any;
 }

@@ -9,6 +9,7 @@ var FieldMetadata = (function () {
 exports.FieldMetadata = FieldMetadata;
 var SerializationMetadata = (function () {
     function SerializationMetadata() {
+        this.fields = {};
     }
     return SerializationMetadata;
 }());
