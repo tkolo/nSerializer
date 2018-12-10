@@ -8,4 +8,5 @@ export default class DeserializationContext extends ContextBase {
     constructor(cls?: Function, referenceBehavior?: ReferenceBehavior, obj?: any);
     createChildContext(obj?: any): DeserializationContext;
     protected createSubContext<T extends ISubContext>(serializer: ISerializer): T;
+    deserialize<T>(dto: any, object?: T): Promise<T>;
 }

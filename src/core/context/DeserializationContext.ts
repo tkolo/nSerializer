@@ -2,6 +2,7 @@ import ContextBase, { ReferenceBehavior } from "./ContextBase";
 import ISerializer from "../../serializers/ISerializer";
 import ISubContext from "./ISubContext";
 import { defaultDeserializationSettingss } from "../../nserializer";
+import { deserializeInternal, guessSerializer } from "../Serializer";
 
 export default class DeserializationContext extends ContextBase {
   public readonly referenceBehavior!: ReferenceBehavior;
@@ -23,5 +24,13 @@ export default class DeserializationContext extends ContextBase {
 
   protected createSubContext<T extends ISubContext>(serializer: ISerializer): T {
     return serializer.createDeserializationSubContext();
+  }
+
+  public async deserialize<T>(dto: any, object?: T): Promise<T> {
+    if (!dto) {
+      return object!;
+    }
+
+    return await deserializeInternal(dto, this.createSubContext(guessSerializer(dto, this.cls || Object))) as T;
   }
 }

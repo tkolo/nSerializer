@@ -136,7 +136,7 @@ export class ObjectSerializer extends SerializerBase {
   }
 
   private static createInstance<T>(cls: Function): T {
-    var a: any = () => {
+    const a: any = () => {
     };
     a.prototype = cls.prototype;
     return new a() as T;
@@ -176,7 +176,7 @@ export class ObjectSerializer extends SerializerBase {
         let obj = context.obj;
         if (!obj) {
           if (metadata.converter) {
-            obj = metadata.converter(argument);
+            obj = await metadata.converter(argument, context);
           } else {
             obj = ObjectSerializer.createInstance(this.cls);
           }

@@ -195,18 +195,20 @@ var ObjectSerializer = (function (_super) {
                                 }
                                 break;
                         }
-                        return [3, 6];
+                        return [3, 9];
                     case 1:
                         metadata = this.cls.prototype[serializable_1.METADATA_FIELD];
                         obj = context.obj;
-                        if (!obj) {
-                            if (metadata.converter) {
-                                obj = metadata.converter(argument);
-                            }
-                            else {
-                                obj = ObjectSerializer.createInstance(this.cls);
-                            }
-                        }
+                        if (!!obj) return [3, 4];
+                        if (!metadata.converter) return [3, 3];
+                        return [4, metadata.converter(argument, context)];
+                    case 2:
+                        obj = _e.sent();
+                        return [3, 4];
+                    case 3:
+                        obj = ObjectSerializer.createInstance(this.cls);
+                        _e.label = 4;
+                    case 4:
                         if (argument.$id) {
                             subContext.addObjectForId(argument.$id, obj);
                         }
@@ -226,24 +228,24 @@ var ObjectSerializer = (function (_super) {
                         for (_b in promises)
                             _a.push(_b);
                         _i = 0;
-                        _e.label = 2;
-                    case 2:
-                        if (!(_i < _a.length)) return [3, 5];
+                        _e.label = 5;
+                    case 5:
+                        if (!(_i < _a.length)) return [3, 8];
                         key = _a[_i];
-                        if (!promises.hasOwnProperty(key)) return [3, 4];
+                        if (!promises.hasOwnProperty(key)) return [3, 7];
                         _c = obj;
                         _d = key;
                         return [4, promises[key]];
-                    case 3:
+                    case 6:
                         _c[_d] = _e.sent();
-                        _e.label = 4;
-                    case 4:
+                        _e.label = 7;
+                    case 7:
                         _i++;
-                        return [3, 2];
-                    case 5:
+                        return [3, 5];
+                    case 8:
                         resolve(obj);
                         return [2];
-                    case 6: return [2];
+                    case 9: return [2];
                 }
             });
         }); });

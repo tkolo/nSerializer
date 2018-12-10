@@ -1,12 +1,13 @@
 import SimpleDtoWithMeta from "../mocks/SimpleDtoWithMeta";
 import { serializeObject } from "../../src/nserializer";
 import ComplexDtoWithMeta from "../mocks/ComplexDtoWithMeta";
-import SelfRerefencing from "../mocks/SelfRerefencing";
+import SelfReferencing from "../mocks/SelfReferencing";
 import { ReferenceBehavior } from "../../src/core/context/ContextBase";
 
 describe('Serializer', () => {
   it('serializes simple object with metadata', async () => {
-    let dto = new SimpleDtoWithMeta("Test");
+    let dto = new SimpleDtoWithMeta();
+    dto.stringField = "Test";
     dto.numberField = 123;
     dto.boolField = true;
 
@@ -80,7 +81,7 @@ describe('Serializer', () => {
   });
 
   it('serializes object graph with cycles', async () => {
-    let dto = new SelfRerefencing();
+    let dto = new SelfReferencing();
     dto.id = 1;
     dto.name = "Test";
     dto.ref = dto;
