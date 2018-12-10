@@ -2,8 +2,7 @@ import SerializationContext from "../core/context/SerializationContext";
 import { guessSerializer } from "../core/Serializer";
 import { SerializerBase } from "./SerializerBase";
 import ISubContext from "../core/context/ISubContext";
-import SerializationMetadata from "../core/SerializationMetadata";
-import { METADATA_FIELD } from "../core/serializable";
+import SerializationMetadata, { METADATA_FIELD } from "../core/SerializationMetadata";
 import DeserializationContext from "../core/context/DeserializationContext";
 import { ReferenceBehavior } from "../core/context/ContextBase";
 
@@ -95,10 +94,8 @@ export class ObjectSerializer extends SerializerBase {
       let promises: { [key: string]: Promise<any> } = {};
       if (metadata) {
         for (let metaKey in metadata.fields) {
-          if (metadata.fields.hasOwnProperty(metaKey)) {
-            let fieldMeta = metadata.fields[metaKey];
-            promises[metaKey] = fieldMeta.serializer.serialize(argument[metaKey], context);
-          }
+          let fieldMeta = metadata.fields[metaKey];
+          promises[metaKey] = fieldMeta.serializer.serialize(argument[metaKey], context);
         }
       }
 
@@ -188,13 +185,11 @@ export class ObjectSerializer extends SerializerBase {
         let promises: { [key: string]: Promise<any> } = {};
         if (metadata) {
           for (let metaKey in metadata.fields) {
-            if (metadata.fields.hasOwnProperty(metaKey)) {
-              if (!(metaKey in argument))
-                continue;
-              const fieldMeta = metadata.fields[metaKey];
-              const childContext = context.createChildContext(obj[metaKey]);
-              promises[metaKey] = fieldMeta.serializer.deserialize(argument[metaKey], childContext);
-            }
+            if (!(metaKey in argument))
+              continue;
+            const fieldMeta = metadata.fields[metaKey];
+            const childContext = context.createChildContext(obj[metaKey]);
+            promises[metaKey] = fieldMeta.serializer.deserialize(argument[metaKey], childContext);
           }
         }
 

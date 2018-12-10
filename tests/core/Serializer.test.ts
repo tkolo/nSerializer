@@ -3,6 +3,7 @@ import { serializeObject } from "../../src/nserializer";
 import ComplexDtoWithMeta from "../mocks/ComplexDtoWithMeta";
 import SelfReferencing from "../mocks/SelfReferencing";
 import { ReferenceBehavior } from "../../src/core/context/ContextBase";
+import { SubTypeA, SubTypeBWithConverter } from "../mocks/Hierarchic";
 
 describe('Serializer', () => {
   it('serializes simple object with metadata', async () => {
@@ -106,5 +107,25 @@ describe('Serializer', () => {
       numberField: 7,
       subObject: null
     });
+  });
+
+  it('serializes hierarchic types', async () => {
+    const typeA = new SubTypeA();
+    typeA.name = "Type A";
+    typeA.count = 10;
+
+    const typeB = new SubTypeBWithConverter(true);
+    typeB.name = "Type B";
+
+    expect(await serializeObject([typeA, typeB], {referenceBehavior: ReferenceBehavior.Serialize})).toEqual([
+      {
+        name: "Type A",
+        count: 10
+      },
+      {
+        name: "Type B",
+        fromConstructor: true
+      }
+    ])
   });
 });

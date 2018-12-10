@@ -1,15 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var SerializationMetadata_1 = require("./SerializationMetadata");
-exports.METADATA_FIELD = Symbol("$nSerializerMeta$$");
 function serializable(serializer, direction) {
     if (direction === void 0) { direction = Direction.Both; }
     return function (target, propertyKey) {
-        var metadata = target[exports.METADATA_FIELD];
-        if (!metadata) {
-            metadata = new SerializationMetadata_1.default();
-            target[exports.METADATA_FIELD] = metadata;
-        }
+        var metadata = SerializationMetadata_1.default.getOrCreateForProto(target);
         metadata.fields[propertyKey] = new SerializationMetadata_1.FieldMetadata(serializer);
     };
 }

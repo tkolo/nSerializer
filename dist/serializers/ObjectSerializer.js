@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var Serializer_1 = require("../core/Serializer");
 var SerializerBase_1 = require("./SerializerBase");
-var serializable_1 = require("../core/serializable");
+var SerializationMetadata_1 = require("../core/SerializationMetadata");
 var ContextBase_1 = require("../core/context/ContextBase");
 var ObjectSerializationContext = (function () {
     function ObjectSerializationContext() {
@@ -85,15 +85,13 @@ var ObjectSerializer = (function (_super) {
                         id = subContext.getIdFor(argument);
                         if (!!id) return [3, 9];
                         dto = {};
-                        metadata = argument[serializable_1.METADATA_FIELD];
+                        metadata = argument[SerializationMetadata_1.METADATA_FIELD];
                         subContext.addAndAssignId(argument, dto);
                         promises = {};
                         if (metadata) {
                             for (metaKey in metadata.fields) {
-                                if (metadata.fields.hasOwnProperty(metaKey)) {
-                                    fieldMeta = metadata.fields[metaKey];
-                                    promises[metaKey] = fieldMeta.serializer.serialize(argument[metaKey], context);
-                                }
+                                fieldMeta = metadata.fields[metaKey];
+                                promises[metaKey] = fieldMeta.serializer.serialize(argument[metaKey], context);
                             }
                         }
                         if (!context.allowDynamic) return [3, 4];
@@ -197,7 +195,7 @@ var ObjectSerializer = (function (_super) {
                         }
                         return [3, 9];
                     case 1:
-                        metadata = this.cls.prototype[serializable_1.METADATA_FIELD];
+                        metadata = this.cls.prototype[SerializationMetadata_1.METADATA_FIELD];
                         obj = context.obj;
                         if (!!obj) return [3, 4];
                         if (!metadata.converter) return [3, 3];
@@ -215,13 +213,11 @@ var ObjectSerializer = (function (_super) {
                         promises = {};
                         if (metadata) {
                             for (metaKey in metadata.fields) {
-                                if (metadata.fields.hasOwnProperty(metaKey)) {
-                                    if (!(metaKey in argument))
-                                        continue;
-                                    fieldMeta = metadata.fields[metaKey];
-                                    childContext = context.createChildContext(obj[metaKey]);
-                                    promises[metaKey] = fieldMeta.serializer.deserialize(argument[metaKey], childContext);
-                                }
+                                if (!(metaKey in argument))
+                                    continue;
+                                fieldMeta = metadata.fields[metaKey];
+                                childContext = context.createChildContext(obj[metaKey]);
+                                promises[metaKey] = fieldMeta.serializer.deserialize(argument[metaKey], childContext);
                             }
                         }
                         _a = [];

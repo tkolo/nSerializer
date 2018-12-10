@@ -5,6 +5,7 @@ import SelfRerefencingWithConverter from "../mocks/SelfReferencingWithConverter"
 import { ReferenceBehavior } from "../../src/core/context/ContextBase";
 import ComplexDtoWithMeta from "../mocks/ComplexDtoWithMeta";
 import DtoWithListMeta from "../mocks/DtoWithListMeta";
+import { SubTypeA, SubTypeBWithConverter } from "../mocks/Hierarchic";
 
 describe('Deserializer', () => {
   it('deserializers simple objects', async () => {
@@ -435,5 +436,24 @@ describe('Deserializer', () => {
     expect(await deserializeObject({
       name: "Test"
     }, DtoWithListMeta)).toEqual(dto);
-  })
+  });
+
+  it('deserializes hierarchic types', async () => {
+    const typeA = new SubTypeA();
+    typeA.name = "Type A";
+    typeA.count = 10;
+
+    const typeB = new SubTypeBWithConverter(true);
+    typeB.name = "Type B";
+
+    expect(await deserializeObject({
+      name: "Type A",
+      count: 10
+    }, SubTypeA)).toEqual(typeA);
+
+    expect(await deserializeObject({
+      name: "Type B",
+      fromConstructor: true
+    }, SubTypeBWithConverter)).toEqual(typeB);
+  });
 });
